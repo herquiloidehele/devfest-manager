@@ -15,12 +15,33 @@ import { EventCard } from './event-card';
       <!-- TODO Mod 2: Use @for to iterate over resource -->
 
       <!-- Static Placeholders for initial verify -->
-      <app-event-card />
-      <app-event-card />
-      <app-event-card />
+      <app-event-card
+        title="Angular keynote"
+        image="/images/angular-keynote.png"
+        date="2026-04-01T17:09:32+00:00"
+        (onDelete)="handleDelete($event)"
+      />
+
+      <app-event-card
+        title="React keynote"
+        image="/images/event4.png"
+        date="2026-03-01T17:09:32+00:00"
+        (onDelete)="handleDelete($event)"
+      />
+
+      <app-event-card
+        title="Vue keynote"
+        image="/images/event4.png"
+        date="2026-02-01T17:09:32+00:00"
+        (onDelete)="handleDelete($event)"
+      />
     </div>
   `,
 })
 export class EventList {
   // TODO Mod 2: Inject Service and use resource()
+
+  handleDelete(eventId: string) {
+    console.log('Delete Event: ' + eventId);
+  }
 }
