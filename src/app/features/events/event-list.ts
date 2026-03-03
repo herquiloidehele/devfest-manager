@@ -13,10 +13,9 @@ import { EventsService } from '../../core/events.service';
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
       @if (events.isLoading()) {
         <div class="animate-pulse text text-gray-500">Loading...</div>
-      }@else{
+      } @else {
         @if (events.hasValue()) {
           @for (event of events.value(); track event) {
             <app-event-card
@@ -26,10 +25,10 @@ import { EventsService } from '../../core/events.service';
               [date]="event.date"
               (onDelete)="handleDelete(event.id)"
             />
-            } @empty {
-                <div class="text-gray-500">No events found.</div>
-              }
+          } @empty {
+            <div class="text-gray-500">No events found.</div>
           }
+        }
       }
     </div>
   `,
@@ -41,12 +40,13 @@ export class EventList {
   readonly events = this.eventsService.getEventResource(this.searchQuery);
 
   handleDelete(eventId: string) {
-    this.eventsService.deleteEvent(eventId).subscribe({next: () => {
-      this.events.reload();
-    },
-    error: (error) => {
-      console.log(error);
-    }
-    })
+    this.eventsService.deleteEvent(eventId).subscribe({
+      next: () => {
+        this.events.reload();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 }

@@ -1,5 +1,5 @@
 import { Component, model } from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-search-bar',
@@ -16,5 +16,5 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
   `,
 })
 export class SearchBar {
-  query = model("");
+  query = model('');
 }

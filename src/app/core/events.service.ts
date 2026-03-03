@@ -28,10 +28,10 @@ export class EventsService {
       }
 
       return `${this.httpUrl}/${id}`;
-    })
+    });
   }
 
-  public deleteEvent(eventId: string){
+  public deleteEvent(eventId: string) {
     return this.httpClient.delete(`${this.httpUrl}/${eventId}`);
-  };
+  }
 }

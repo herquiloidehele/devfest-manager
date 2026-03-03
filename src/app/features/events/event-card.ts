@@ -65,7 +65,10 @@ import { RouterLink } from '@angular/router';
         </div>
 
         <div class="mt-4 pt-4 border-t border-gray-100 text-right">
-          <a class="text-blue-600 font-medium hover:underline cursor-pointer" [routerLink]="['/event', id()]">
+          <a
+            class="text-blue-600 font-medium hover:underline cursor-pointer"
+            [routerLink]="['/event', id()]"
+          >
             View Details →
           </a>
         </div>
