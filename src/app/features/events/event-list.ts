@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { EventCard } from './event-card';
 import { SearchBar } from './search-bar';
+import { EventsService } from '../../core/events.service';
 
 @Component({
   selector: 'app-event-list',
@@ -9,42 +10,42 @@ import { SearchBar } from './search-bar';
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-gray-900 mb-4">Upcoming Events</h1>
       <app-search-bar [(query)]="searchQuery" />
-      {{ searchQuery() }}
     </div>
 
-    <!-- TODO Mod 2: Wrap in @if (events.isLoading()) -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- TODO Mod 2: Use @for to iterate over resource -->
 
-      <!-- Static Placeholders for initial verify -->
-      <app-event-card
-        title="Angular keynote"
-        image="/images/angular-keynote.png"
-        date="2026-04-01T17:09:32+00:00"
-        (onDelete)="handleDelete($event)"
-      />
-
-      <app-event-card
-        title="React keynote"
-        image="/images/event4.png"
-        date="2026-03-01T17:09:32+00:00"
-        (onDelete)="handleDelete($event)"
-      />
-
-      <app-event-card
-        title="Vue keynote"
-        image="/images/event4.png"
-        date="2026-02-01T17:09:32+00:00"
-        (onDelete)="handleDelete($event)"
-      />
+      @if (events.isLoading()) {
+        <div class="animate-pulse text text-gray-500">Loading...</div>
+      }@else{
+        @if (events.hasValue()) {
+          @for (event of events.value(); track event) {
+            <app-event-card
+              [title]="event.title"
+              [image]="event.image"
+              [date]="event.date"
+              (onDelete)="handleDelete(event.id)"
+            />
+            } @empty {
+                <div class="text-gray-500">No events found.</div>
+              }
+          }
+      }
     </div>
   `,
 })
 export class EventList {
+  eventsService = inject(EventsService);
   searchQuery = signal('');
-  // TODO Mod 2: Inject Service and use resource()
+
+  readonly events = this.eventsService.getEventResource(this.searchQuery);
 
   handleDelete(eventId: string) {
-    console.log('Delete Event: ' + eventId);
+    this.eventsService.deleteEvent(eventId).subscribe({next: () => {
+      this.events.reload();
+    },
+    error: (error) => {
+      console.log(error);
+    }
+    })
   }
 }
