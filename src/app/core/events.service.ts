@@ -1,6 +1,7 @@
-import { inject, Injectable, Signal } from '@angular/core';
+import { inject, Injectable, signal, Signal } from '@angular/core';
 import { HttpClient, httpResource } from '@angular/common/http';
 import { DevFestEvent } from '../models/event.model';
+import { finalize } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,8 @@ import { DevFestEvent } from '../models/event.model';
 export class EventsService {
   private httpUrl = 'http://localhost:3000/events';
   private readonly httpClient = inject(HttpClient);
+  readonly isCreating = signal(false);
+  readonly isDeleting = signal(false);
 
   public getEventResource(query: Signal<string>) {
     return httpResource<DevFestEvent[]>(() => {
@@ -32,6 +35,20 @@ export class EventsService {
   }
 
   public deleteEvent(eventId: string) {
-    return this.httpClient.delete(`${this.httpUrl}/${eventId}`);
+    this.isDeleting.set(true);
+    return this.httpClient.delete(`${this.httpUrl}/${eventId}`).pipe(
+      finalize(() => {
+        this.isDeleting.set(false);
+      }),
+    );
+  }
+
+  public createEvent(event: Omit<DevFestEvent, 'id'>) {
+    this.isCreating.set(true);
+    return this.httpClient.post<DevFestEvent>(this.httpUrl, event).pipe(
+      finalize(() => {
+        this.isCreating.set(false);
+      }),
+    );
   }
 }
