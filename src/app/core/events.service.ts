@@ -20,6 +20,17 @@ export class EventsService {
     });
   }
 
+  public getEventById(eventId: Signal<string>) {
+    return httpResource<DevFestEvent>(() => {
+      const id = eventId();
+      if (!id) {
+        throw new Error('Event ID is required');
+      }
+
+      return `${this.httpUrl}/${id}`;
+    })
+  }
+
   public deleteEvent(eventId: string){
     return this.httpClient.delete(`${this.httpUrl}/${eventId}`);
   };

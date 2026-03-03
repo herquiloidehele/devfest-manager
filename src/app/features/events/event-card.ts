@@ -1,9 +1,10 @@
 import { Component, computed, input, linkedSignal, output } from '@angular/core';
 import { DatePipe, NgClass, NgOptimizedImage } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-event-card',
-  imports: [NgOptimizedImage, NgClass, DatePipe],
+  imports: [NgOptimizedImage, NgClass, DatePipe, RouterLink],
   template: `
     <div
       class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
@@ -21,7 +22,7 @@ import { DatePipe, NgClass, NgOptimizedImage } from '@angular/common';
         <div class="flex justify-between items-center mt-4">
           <!-- TODO Mod 1: Add Date using DatePipe -->
           <p class="text-sm text-blue-600 font-semibold mb-2">
-            {{(date() | date: "mediumDate") || "TBA" }}
+            {{ (date() | date: 'mediumDate') || 'TBA' }}
           </p>
 
           @let days = daysUntil();
@@ -64,13 +65,16 @@ import { DatePipe, NgClass, NgOptimizedImage } from '@angular/common';
         </div>
 
         <div class="mt-4 pt-4 border-t border-gray-100 text-right">
-          <a class="text-blue-600 font-medium hover:underline cursor-pointer"> View Details → </a>
+          <a class="text-blue-600 font-medium hover:underline cursor-pointer" [routerLink]="['/event', id()]">
+            View Details →
+          </a>
         </div>
       </div>
     </div>
   `,
 })
 export class EventCard {
+  readonly id = input.required<string>();
   readonly title = input.required<string>();
   readonly image = input.required<string>();
   readonly date = input<string>();
@@ -97,6 +101,6 @@ export class EventCard {
   }
 
   handleDelete() {
-    this.onDelete.emit("1");
+    this.onDelete.emit('1');
   }
 }
