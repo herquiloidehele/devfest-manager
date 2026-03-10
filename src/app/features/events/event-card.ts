@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-event-card',
-  imports: [NgOptimizedImage, NgClass, DatePipe, RouterLink],
+  imports: [NgOptimizedImage, NgClass, DatePipe, RouterLink, NgOptimizedImage],
   template: `
     <div
       class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
@@ -13,9 +13,9 @@ import { RouterLink } from '@angular/router';
         [ngSrc]="image()"
         class="object-cover w-full h-full max-h-full max-w-full"
         alt="Event thumbnail"
-        width="300"
+        width="500"
         height="300"
-        priority="priority"
+        priority
       />
 
       <div class="p-6">

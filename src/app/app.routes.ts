@@ -1,11 +1,16 @@
 import { Routes } from '@angular/router';
-import { EventList } from './features/events/event-list';
-import { EventDetails } from './features/events/event-details';
 import { authGuard } from './core/auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: EventList },
-  { path: 'event/:id', component: EventDetails },
+  {
+    path: '',
+    loadComponent: () => import('./features/events/event-list').then((module) => module.EventList),
+  },
+  {
+    path: 'event/:id',
+    loadComponent: () =>
+      import('./features/events/event-details').then((module) => module.EventDetails),
+  },
   {
     path: 'admin/create',
     loadComponent: () =>

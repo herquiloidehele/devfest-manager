@@ -8,7 +8,7 @@ import { EventsService } from '../../core/events.service';
   imports: [EventCard, SearchBar],
   template: `
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-4">Upcoming Events</h1>
+      <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ title() }}</h1>
       <app-search-bar [(query)]="searchQuery" />
     </div>
 
@@ -34,8 +34,16 @@ import { EventsService } from '../../core/events.service';
   `,
 })
 export class EventList {
+  title = signal('Upcoming Events');
+
   eventsService = inject(EventsService);
   searchQuery = signal('');
+
+  constructor() {
+    setTimeout(() => {
+      this.title.set('Updated Events List');
+    }, 5000);
+  }
 
   readonly events = this.eventsService.getEventResource(this.searchQuery);
 
