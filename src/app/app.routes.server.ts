@@ -7,10 +7,7 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'event/:id',
-    renderMode: RenderMode.Prerender,
-    async getPrerenderParams() {
-      return [{ id: '1' }, { id: '2' }];
-    },
+    renderMode: RenderMode.Server,
   },
   {
     path: 'admin/create',
