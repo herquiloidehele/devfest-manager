@@ -2,10 +2,12 @@ import { Component, computed, input, linkedSignal, output } from '@angular/core'
 import { DatePipe, NgClass, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UICard } from '../../shared/ui-card';
+import { ClickLogger } from '../../shared/directive/click-logger';
 
 @Component({
   selector: 'app-event-card',
   imports: [NgOptimizedImage, NgClass, DatePipe, RouterLink, NgOptimizedImage, UICard],
+  hostDirectives: [{ directive: ClickLogger, inputs: ['eventName: trackingId'] }],
   template: `
     <app-ui-card>
       <div card-header class="relative h-48 w-full bg-gray-200">
@@ -47,7 +49,6 @@ import { UICard } from '../../shared/ui-card';
         <h3 class="text-xl font-bold text-gray-800 my-2">{{ title() }}</h3>
 
         <div class="flex justify-between items-center mt-4">
-          <!-- TODO Mod 1: Add Derived State (Like Button) -->
           <button
             class="hover:text-red-500 hover:cursor-pointer transition-colors cursor-pointer"
             [ngClass]="isFavorite() ? 'text-red-500' : 'text-gray-400'"
@@ -56,7 +57,6 @@ import { UICard } from '../../shared/ui-card';
             {{ isFavorite() ? '♥' : '♡' }} Like
           </button>
 
-          <!-- TODO Mod 1: Add Output -->
           <button
             class="text-gray-400 text-sm hover:text-gray-600 cursor-pointer"
             (click)="handleDelete()"
