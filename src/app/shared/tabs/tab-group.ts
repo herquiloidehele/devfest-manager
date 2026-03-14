@@ -1,4 +1,4 @@
-import { Component, contentChildren, inject } from '@angular/core';
+import { Component, contentChildren, effect, inject } from '@angular/core';
 import { TabState } from './tab-state';
 import { Tab } from './tab';
 
@@ -18,9 +18,9 @@ import { Tab } from './tab';
           {{ tab.label() }}
         </button>
       }
-
-      <ng-content />
     </div>
+
+    <ng-content />
   `,
 })
 export class TabGroup {
@@ -29,5 +29,15 @@ export class TabGroup {
 
   protected activateTab(tab: Tab) {
     this.tabState.activeTab.set(tab.label());
+  }
+
+  constructor() {
+    effect(() => {
+      const firstTab = this.tabs()[0];
+
+      if (firstTab && !this.tabState.activeTab()) {
+        this.tabState.activeTab.set(firstTab.label());
+      }
+    });
   }
 }
