@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from '../core/CartService';
+import { CartStore } from '../core/cart-store';
 
 @Component({
   selector: 'app-header',
@@ -40,5 +41,5 @@ import { CartService } from '../core/CartService';
   `,
 })
 export class Header {
-  readonly count = inject(CartService).count;
+  readonly count = inject(CartStore).count;
 }

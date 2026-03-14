@@ -1,10 +1,10 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, effect, inject, input } from '@angular/core';
 import { EventsService } from '../../core/events.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { CartService } from '../../core/CartService';
 import { TabGroup } from '../../shared/tabs/tab-group';
 import { Tab } from '../../shared/tabs/tab';
+import { CartStore } from '../../core/cart-store';
 
 @Component({
   selector: 'app-event-details',
@@ -87,10 +87,14 @@ import { Tab } from '../../shared/tabs/tab';
             </div>
 
             <button
-              class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 shadow-lg transition"
+              class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 shadow-lg transition cursor-pointer"
               (click)="buyTicket()"
+              [ngClass]="
+                cartStore.isPending() ? 'cursor-not-allowed opacity-50' : 'hover:bg-blue-700'
+              "
+              [disabled]="cartStore.isPending()"
             >
-              Buy Tickets
+              {{ cartStore.isPending() ? 'Adding...' : 'Buy Tickets' }}
             </button>
           </div>
         </div>
@@ -102,12 +106,20 @@ import { Tab } from '../../shared/tabs/tab';
 })
 export class EventDetails {
   private readonly eventService = inject(EventsService);
-  private readonly cartService = inject(CartService);
+  readonly cartStore = inject(CartStore);
   readonly id = input.required<string>();
 
   readonly eventDetails = this.eventService.getEventById(this.id);
 
+  constructor() {
+    effect(() => {
+      if (this.cartStore.isError()) {
+        alert('Failed to buy ticket. Please try again later.');
+      }
+    });
+  }
+
   public buyTicket() {
-    this.cartService.buyTicket(this.id());
+    this.cartStore.buyTicket({ eventId: this.id() });
   }
 }

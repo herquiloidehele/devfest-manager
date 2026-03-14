@@ -1,6 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { TICKETS_URL } from './tokens';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs';
 
 interface TicketEntry {
   id: string;
@@ -12,39 +13,19 @@ export class CartService {
   private readonly httpClient = inject(HttpClient);
   private readonly ticketUrl = inject(TICKETS_URL);
 
-  private readonly ticketIds = signal<string[]>([]);
-
-  readonly count = computed(() => this.ticketIds().length);
-
-  constructor() {
-    this.loadTickets();
+  public loadTickets() {
+    return this.httpClient.get<TicketEntry[]>(this.ticketUrl);
   }
 
-  private loadTickets() {
-    this.httpClient.get<TicketEntry[]>(this.ticketUrl).subscribe({
-      next: (data) => {
-        const ids = data.map((entry) => entry.id);
-        this.ticketIds.set(ids);
-      },
-      error: (err) => {},
-    });
+  public loadTicketIds() {
+    return this.loadTickets().pipe(
+      map((response: TicketEntry[]) => {
+        return response.map((entry) => entry.id);
+      }),
+    );
   }
 
   public buyTicket(eventId: string) {
-    const previousIds = this.ticketIds();
-
-    this.ticketIds.update((ids) => [...ids, eventId]);
-
-    this.httpClient.post(this.ticketUrl, { eventId }).subscribe({
-      next: () => {
-        console.log('Optimistic update successful');
-      },
-      error: (err) => {
-        console.error('Failed to buy ticket:', err);
-
-        //restore the state
-        this.ticketIds.set(previousIds);
-      },
-    });
+    return this.httpClient.post(this.ticketUrl, { eventId });
   }
 }
