@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { EventsService } from '../../core/events.service';
-import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../core/CartService';
 import { TabGroup } from '../../shared/tabs/tab-group';
@@ -8,7 +8,7 @@ import { Tab } from '../../shared/tabs/tab';
 
 @Component({
   selector: 'app-event-details',
-  imports: [DatePipe, RouterLink, NgOptimizedImage, CommonModule, TabGroup, Tab],
+  imports: [DatePipe, RouterLink, CommonModule, TabGroup, Tab],
   template: `
     <div class="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto min-h-[600px]">
       <a routerLink="/" class="text-blue-600 hover:underline mb-6 inline-block">
